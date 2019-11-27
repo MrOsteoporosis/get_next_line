@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/26 15:31:47 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/27 14:31:10 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,21 +65,23 @@ char		*ft_strjoin(char *s1, char *s2)
 	return (res);
 }
 
-int		extract_line(char *reserves, char **line, int c)
+int		extract_line(char **reserves, char **line, int c)
 {
 	char			*temp;
 
-	printf("NL _%d_%zu_\n", c, ft_strchr(reserves, c));
-	*line = ft_substr(reserves, 0, ft_strchr(reserves, c));
+	printf("\tNL _%d_%d_\n", c, ft_strchr(*reserves, c));
+	*line = ft_substr(*reserves, 0, ft_strchr(*reserves, c));
 	if (c == '\0')
 	{
-		free(reserves);
+		free(*reserves);
 		return (0);
 	}
-	temp = ft_substr(reserves, ft_strchr(reserves, c) + 1,
-		ft_strlen(reserves) - ft_strchr(reserves, c));
-	free(reserves);
-	reserves = temp;
+	printf("\tRE1 _%d_%s_\n", ft_strchr(*reserves, '\n'), *reserves);
+	temp = ft_substr(*reserves, ft_strchr(*reserves, c) + 1,
+		ft_strlen(*reserves) - ft_strchr(*reserves, c));
+	free(*reserves);
+	*reserves = temp;
+	printf("\tRE2 _%d_%s_\n", ft_strchr(*reserves, '\n'), *reserves);
 	return (1);
 }
 
@@ -105,15 +107,15 @@ int		get_next_line(int fd, char **line)
 		temp = ft_strjoin(reserves, buf);
 		free(reserves);
 		reserves = temp;
-		printf("BUF _%zu_%s_\n", readc, buf);
-		printf("RES _%d_%s_\n", ft_strchr(reserves, '\n'), reserves);
+		printf("\tBUF _%zu_%s_\n", readc, buf);
+		printf("\tRES _%d_%s_\n", ft_strchr(reserves, '\n'), reserves);
 	}
-	printf("\nREADC _%zu_\n", readc);
+	printf("\n\tREADC _%zu_\n", readc);
 	if (readc)
-		return (extract_line(reserves, line, '\n'));
+		return (extract_line(&reserves, line, '\n'));
 	else
-		return (extract_line(reserves, line, '\0'));
+		return (extract_line(&reserves, line, '\0'));
 	
-	// printf("LIN _%s_\n", *line);
-	// printf("RES _%s_\n", reserves);
+	printf("\tLIN _%s_\n", *line);
+	printf("\tRES _%s_\n", reserves);
 }
