@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:25 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/26 14:24:48 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/27 15:10:12 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,22 @@ char	*ft_strdup(const char *src)
 	return (cpy);
 }
 
-int		ft_strlen(char *s)
+int		ft_strrchr(char *s, int c)
 {
 	size_t	i;
 
 	i = 0;
 	while (s[i])
 		i++;
-	return (i);
+	if (!c)
+		return (i);
+	while (i >= 0)
+	{
+		if (s[i] == c)
+			return (i);
+		i--;
+	}
+	return (-1);
 }
 
 int		ft_strchr(char *s, int c)
@@ -76,5 +84,5 @@ int		ft_strchr(char *s, int c)
 	}
 	if (!c)
 		return (i);
-	return (0);
+	return (-1);
 }
