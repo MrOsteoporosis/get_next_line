@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:25 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/28 15:37:09 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/28 15:56:04 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int		ft_strchr(t_file *f, int c)//Only ever used with \n i think, confirm
 char	*ft_substr(t_file *f, unsigned int start, size_t sublen)
 {
 	char	*sub;
-	size_t	i;
 
 	if (!f->raw)
 		return (NULL);
@@ -86,10 +85,10 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (i);
 }
 
-char		*ft_strjoin(t_file *file, char *str, int readc)//Done
+char		*ft_strjoin(t_file *file, char *str, size_t readc)
 {
 	char	*res;
-	int		i;
+	size_t	i;
 
 	if (!file->raw || !str)
 		return (NULL);

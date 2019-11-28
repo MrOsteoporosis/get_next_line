@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:30 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/28 15:11:23 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/28 15:55:59 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 typedef struct		s_file
 {
 	char			*raw;
-	int				len;
+	size_t			len;
 	int				fd;
 	struct s_file	*next;
 }					t_file;
@@ -32,7 +32,7 @@ void				read_line(t_file *file);
 int					extract_line(t_file *file, char **line, int c);
 int					ft_strchr(t_file *f, int c);
 char				*ft_strdup(const char *src);
-char				*ft_strjoin(t_file *file, char *str, int readc);
+char				*ft_strjoin(t_file *file, char *str, size_t readc);
 char				*ft_substr(t_file *f, unsigned int start, size_t sublen);
 size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize);
 #endif
