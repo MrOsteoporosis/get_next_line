@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:25 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/28 15:06:47 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/28 15:37:09 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strdup(const char *src)
 	return (cpy);
 }
 
-int		ft_strchr(t_file *f, int c)
+int		ft_strchr(t_file *f, int c)//Only ever used with \n i think, confirm
 {
 	size_t	i;
 
@@ -84,4 +84,27 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	while (src[i])
 		i++;
 	return (i);
+}
+
+char		*ft_strjoin(t_file *file, char *str, int readc)//Done
+{
+	char	*res;
+	int		i;
+
+	if (!file->raw || !str)
+		return (NULL);
+	res = (char*)malloc(sizeof(char) * (file->len + readc + 1));
+	if (!res)
+		return (NULL);
+	res[file->len + readc] = '\0';
+	i = 0;
+	while (i < file->len || i < readc)
+	{
+		if (i < file->len)
+			res[i] = file->raw[i];
+		if (i < readc)
+			res[i + file->len] = str[i];
+		i++;
+	}
+	return (res);
 }

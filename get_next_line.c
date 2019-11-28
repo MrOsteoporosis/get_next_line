@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/28 15:23:50 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/28 15:36:54 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,42 +20,20 @@
 ** -1 : An error happened
 */
 
-char		*ft_strjoin(t_file *file, char *str, int readc)//Done
-{
-	char	*res;
-	int		i;
-
-	if (!file->raw || !str)
-		return (NULL);
-	res = (char*)malloc(sizeof(char) * (file->len + readc + 1));
-	if (!res)
-		return (NULL);
-	res[file->len + readc] = '\0';
-	i = 0;
-	while (i < file->len || i < readc)
-	{
-		if (i < file->len)
-			res[i] = file->raw[i];
-		if (i < readc)
-			res[i + file->len] = str[i];
-		i++;
-	}
-	return (res);
-}
-
-int		extract_line(t_file *file, char **line, int c)//Done
+int		extract_line(t_file *file, char **line, int c)
 {
 	char			*temp;
 
-	printf("\tCHR _%d_%d_\n", c, ft_strchr(*persistent, c));
-	printf("\tRES _%d_%s_\n", ft_strchr(*persistent, '\n'), *persistent);
-	*line = ft_substr(file, 0, ft_strchr(file, c));
+	printf("\tCHR _%d_%d_\n", c, ft_strchr(file, c));//Based on length
+	printf("\tRES _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
+	*line = ft_substr(file, 0, ft_strchr(file, c));//This based on length
 	printf("\tLINE _%s_\n", *line);
 	if (c == '\0')
 	{
 		perror("EOF free res");
 		free(file->raw);
 		file->raw = NULL;
+		//Free struct and remove from list
 		return (0);
 	}
 	temp = ft_substr(file, ft_strchr(file, c) + 1,
@@ -63,11 +41,11 @@ int		extract_line(t_file *file, char **line, int c)//Done
 	//Shorten length as needed
 	free(file->raw);
 	file->raw = temp;
-	printf("\tRESF _%d_%s_\n", ft_strchr(*persistent, '\n'), *persistent);
+	printf("\tRESF _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
 	return (1);
 }
 
-void	read_line(t_file *file)//Done
+void	read_line(t_file *file)
 {
 	size_t		readc;
 	char		*temp;
@@ -84,13 +62,13 @@ void	read_line(t_file *file)//Done
 		free(file->raw);
 		file->raw = temp;
 		printf("\tREADC BUF _%zu_%s_\n", readc, buf);
-		printf("\t\\N RES _%d_%s_\n", ft_strchr(*persistent, '\n'), *persistent);
+		printf("\t\\N RES _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
 	}
 }
 
-int		get_next_line(int fd, char **line)//Done
+int		get_next_line(int fd, char **line)
 {
-	static t_file	persistent;//Struct
+	static t_file	persistent;
 	t_file			*file;
 
 	file = get_file(&persistent, fd);
@@ -102,16 +80,16 @@ int		get_next_line(int fd, char **line)//Done
 	}
 	if (read(fd, 0, 0) == -1)
 		return (-1);
-	printf("\t\\N RESI _%d_%s_\n", ft_strchr(persistent, '\n'), persistent);
+	printf("\t\\N RESI _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
 	read_line(file);
 	perror("Extracting");
-	if (ft_strchr(file, '\n') != -1)//Pass variable//Pass struct to use readc length
-		return (extract_line(file, line, '\n'));//Whole struct
+	if (ft_strchr(file, '\n') != -1)
+		return (extract_line(file, line, '\n'));
 	else
-		return (extract_line(file, line, '\0'));//Whole struct
+		return (extract_line(file, line, '\0'));
 }
 
-t_file	*get_file(t_file *persistent, int inputfd)//Done
+t_file	*get_file(t_file *persistent, int inputfd)
 {
 	t_file		*newfile;
 
