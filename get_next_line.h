@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:30 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/28 15:11:23 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/28 12:49:28 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,13 @@
 #  define BUFFER_SIZE	32
 # endif
 
-typedef struct		s_file
-{
-	char			*raw;
-	int				len;
-	int				fd;
-	struct s_file	*next;
-}					t_file;
-
 int					get_next_line(int fd, char **line);
-t_file				*get_file(t_file *persistent, int inputfd);
-void				read_line(t_file *file);
-int					extract_line(t_file *file, char **line, int c);
-int					ft_strchr(t_file *f, int c);
+int					read_line(char **persistent, int fd);
+int					extract_line(char **persistent, char **line, int c);
+int					ft_strchr(char *s, int c);
+int					ft_strrchr(char *s, int c);
 char				*ft_strdup(const char *src);
-char				*ft_strjoin(t_file *file, char *str, int readc);
-char				*ft_substr(t_file *f, unsigned int start, size_t sublen);
+char				*ft_strjoin(char *s1, char *s2);
+char				*ft_substr(char *s, unsigned int start, size_t len);
 size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize);
 #endif
