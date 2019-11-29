@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:25 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/28 15:56:04 by averheij      ########   odam.nl         */
+/*   Updated: 2019/11/29 12:18:37 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*ft_substr(t_file *f, unsigned int start, size_t sublen)
 	if (f->len < start)
 		return (ft_strdup(""));
 	sub = (char*)malloc(sizeof(char) *
-		((f->len - start < sublen) ? f->len - start : sublen) + 1);
+		(((f->len - start < sublen) ? f->len - start : sublen) + 1));
 	if (!sub)
 		return (NULL);
 	ft_strlcpy(sub, f->raw + start, ((f->len - start < sublen) ? f->len - start : sublen) + 1);
