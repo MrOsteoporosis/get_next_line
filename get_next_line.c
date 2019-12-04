@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/29 13:40:17 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/04 11:19:01 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int		extract_line(t_file **persistent, t_file *file, char **line, int c)
 	char			*temp;
 
 	// printf("\tRES _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
-	if (line && *line)
+	if (line)
 		free(*line);
 	*line = ft_substr(file, 0, ft_strchr(file, c));
 	// printf("\tLINE _%s_\n", *line);
@@ -126,13 +126,7 @@ int		get_next_line(int fd, char **line)
 	t_file			*file;
 
 	file = get_file(&persistent, fd);
-	// if (!file->raw)
-	// {
-		// perror("persistent init");
-	// 	file->raw = (char*)malloc(sizeof(char));
-	// 	file->raw[0] = '\0';
-	// }
-	if (read(fd, 0, 0) == -1)
+	if (BUFFER_SIZE < 0 || read(fd, 0, 0) == -1)
 		return (-1);
 	// printf("\t\\N RESI _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
 	read_line(file);
