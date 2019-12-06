@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:25 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/29 12:18:37 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/06 13:28:04 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_strdup(const char *src)
 	l = 0;
 	while (src[l])
 		l++;
-	cpy = (char*)malloc(l + 1);
+	cpy = (char *)malloc(l + 1);
 	if (!cpy)
 		return (NULL);
 	i = 0;
@@ -34,7 +34,7 @@ char	*ft_strdup(const char *src)
 	return (cpy);
 }
 
-int		ft_strchr(t_file *f, int c)//Only ever used with \n i think, confirm
+int		ft_strchr(t_file *f, int c)
 {
 	size_t	i;
 
@@ -58,7 +58,7 @@ char	*ft_substr(t_file *f, unsigned int start, size_t sublen)
 		return (NULL);
 	if (f->len < start)
 		return (ft_strdup(""));
-	sub = (char*)malloc(sizeof(char) *
+	sub = (char *)malloc(sizeof(char) *
 		(((f->len - start < sublen) ? f->len - start : sublen) + 1));
 	if (!sub)
 		return (NULL);
@@ -92,7 +92,7 @@ char		*ft_strjoin(t_file *file, char *str, size_t readc)
 
 	if (!file->raw || !str)
 		return (NULL);
-	res = (char*)malloc(sizeof(char) * (file->len + readc + 1));
+	res = (char *)malloc(sizeof(char) * (file->len + readc + 1));
 	if (!res)
 		return (NULL);
 	res[file->len + readc] = '\0';

@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/04 11:19:01 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/06 13:27:29 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ t_file	*get_file(t_file **dontuseme, int inputfd)
 	if (persistent && persistent->fd == inputfd)
 			return (persistent);
 	// perror("No File Found");
-	newfile = (t_file*)malloc(sizeof(t_file));
+	newfile = (t_file *)malloc(sizeof(t_file));
 	if (*dontuseme)
 		persistent->next = newfile;
 	else
@@ -115,7 +115,7 @@ t_file	*get_file(t_file **dontuseme, int inputfd)
 	newfile->len = 0;
 	newfile->fd = inputfd;
 	newfile->next = NULL;
-	newfile->raw = (char*)malloc(sizeof(char));
+	newfile->raw = (char *)malloc(sizeof(char));
 	newfile->raw[0] = '\0';
 	return (newfile);
 }
