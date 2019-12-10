@@ -6,13 +6,11 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/06 13:27:29 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/10 13:05:57 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#include <stdio.h>
 
 /*
 ** 1 : A line has been read
@@ -23,26 +21,20 @@
 int		freemachin(t_file **persistent, t_file *file)
 {
 	t_file			*ptr;
-	// perror("EOF free res");
+
 	free(file->raw);
 	file->raw = NULL;
 	if (*persistent == file)
-	{
-		// perror("New First");
-		*persistent = file->next; 
-	}
+		*persistent = file->next;
 	else
 	{
-		// perror("Link shift");
 		ptr = *persistent;
 		while (ptr->next != file)
 			ptr = ptr->next;
 		ptr->next = file->next;
 	}
-	// perror("Free Done");
 	free(file);
 	file = NULL;
-	//Free struct and remove from list
 	return (0);
 }
 
@@ -50,19 +42,16 @@ int		extract_line(t_file **persistent, t_file *file, char **line, int c)
 {
 	char			*temp;
 
-	// printf("\tRES _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
 	if (line)
 		free(*line);
 	*line = ft_substr(file, 0, ft_strchr(file, c));
-	// printf("\tLINE _%s_\n", *line);
 	if (c == '\0')
 		return (freemachin(persistent, file));
 	temp = ft_substr(file, ft_strchr(file, c) + 1,
-		file->len - ft_strchr(file, c)); 
+		file->len - ft_strchr(file, c));
 	file->len -= ft_strchr(file, c) + 1;
 	free(file->raw);
 	file->raw = temp;
-	// printf("\tRESF _%d_%zu_%s_\n", ft_strchr(file, '\n'), file->len, file->raw);
 	return (1);
 }
 
@@ -73,7 +62,6 @@ void	read_line(t_file *file)
 	char		buf[BUFFER_SIZE + 1];
 
 	readc = 1;
-	// perror("Start read");
 	while (readc && ft_strchr(file, '\n') == -1)
 	{
 		readc = read(file->fd, buf, BUFFER_SIZE);
@@ -82,8 +70,6 @@ void	read_line(t_file *file)
 		file->len += readc;
 		free(file->raw);
 		file->raw = temp;
-		// printf("\tREADC BUF _%zu_%s_\n", readc, buf);
-		// printf("\t\\N RES _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
 	}
 }
 
@@ -93,20 +79,14 @@ t_file	*get_file(t_file **dontuseme, int inputfd)
 	t_file		*persistent;
 
 	persistent = *dontuseme;
-	// printf("PERSIS_%p_\n", *persistent);
-	// printf("FD IN_%d_\n", inputfd);
-	while(persistent && persistent->next)
+	while (persistent && persistent->next)
 	{
-		// printf("FD FILE_%d_\n", persistent)->fd);
 		if (persistent->fd == inputfd)
-			return persistent;
+			return (persistent);
 		persistent = persistent->next;
 	}
-	if (persistent)
-		// printf("FD FILE_%d_\n", persistent)->fd);
 	if (persistent && persistent->fd == inputfd)
-			return (persistent);
-	// perror("No File Found");
+		return (persistent);
 	newfile = (t_file *)malloc(sizeof(t_file));
 	if (*dontuseme)
 		persistent->next = newfile;
@@ -128,9 +108,7 @@ int		get_next_line(int fd, char **line)
 	file = get_file(&persistent, fd);
 	if (BUFFER_SIZE < 0 || read(fd, 0, 0) == -1)
 		return (-1);
-	// printf("\t\\N RESI _%d_%s_\n", ft_strchr(file, '\n'), file->raw);
 	read_line(file);
-	// perror("Extracting");
 	if (ft_strchr(file, '\n') != -1)
 		return (extract_line(&persistent, file, line, '\n'));
 	else

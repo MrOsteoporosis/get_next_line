@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:25 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/06 13:28:04 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/10 13:01:27 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ char	*ft_substr(t_file *f, unsigned int start, size_t sublen)
 		(((f->len - start < sublen) ? f->len - start : sublen) + 1));
 	if (!sub)
 		return (NULL);
-	ft_strlcpy(sub, f->raw + start, ((f->len - start < sublen) ? f->len - start : sublen) + 1);
+	ft_strlcpy(sub, f->raw + start,
+		((f->len - start < sublen) ? f->len - start : sublen) + 1);
 	return (sub);
 }
 
@@ -85,7 +86,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (i);
 }
 
-char		*ft_strjoin(t_file *file, char *str, size_t readc)
+char	*ft_strjoin(t_file *file, char *str, size_t readc)
 {
 	char	*res;
 	size_t	i;

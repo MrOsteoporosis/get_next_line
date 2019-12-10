@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:30 by averheij       #+#    #+#                */
-/*   Updated: 2019/11/29 11:29:18 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/10 13:02:20 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ typedef struct		s_file
 int					get_next_line(int fd, char **line);
 t_file				*get_file(t_file **persistent, int inputfd);
 void				read_line(t_file *file);
-int					extract_line(t_file **persistent, t_file *file, char **line, int c);
+int					extract_line(t_file **persistent, t_file *file, char **line,
+						int c);
 int					freemachin(t_file **persistent, t_file *file);
 int					ft_strchr(t_file *f, int c);
 char				*ft_strdup(const char *src);
