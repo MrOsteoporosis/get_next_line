@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/10 13:05:57 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/10 14:26:28 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ int		extract_line(t_file **persistent, t_file *file, char **line, int c)
 
 	if (line)
 		free(*line);
-	*line = ft_substr(file, 0, ft_strchr(file, c));
+	*line = ft_substr(file, 0, ft_strchr(file, c));//Return -1 on fail
 	if (c == '\0')
 		return (freemachin(persistent, file));
-	temp = ft_substr(file, ft_strchr(file, c) + 1,
+	temp = ft_substr(file, ft_strchr(file, c) + 1,//Return -1 on fail
 		file->len - ft_strchr(file, c));
 	file->len -= ft_strchr(file, c) + 1;
 	free(file->raw);
@@ -59,21 +59,21 @@ void	read_line(t_file *file)
 {
 	size_t		readc;
 	char		*temp;
-	char		buf[BUFFER_SIZE + 1];
+	char		buf[BUFFER_SIZE + 1];//Malloc
 
 	readc = 1;
 	while (readc && ft_strchr(file, '\n') == -1)
 	{
 		readc = read(file->fd, buf, BUFFER_SIZE);
 		buf[readc] = '\0';
-		temp = ft_strjoin(file, buf, readc);
+		temp = ft_strjoin(file, buf, readc);//Return -1 on fail
 		file->len += readc;
 		free(file->raw);
 		file->raw = temp;
 	}
 }
 
-t_file	*get_file(t_file **dontuseme, int inputfd)
+t_file	*get_file(t_file **dontuseme, int inputfd)//Rewrite
 {
 	t_file		*newfile;
 	t_file		*persistent;
@@ -88,6 +88,8 @@ t_file	*get_file(t_file **dontuseme, int inputfd)
 	if (persistent && persistent->fd == inputfd)
 		return (persistent);
 	newfile = (t_file *)malloc(sizeof(t_file));
+	if (!newfile)
+		return (NULL);
 	if (*dontuseme)
 		persistent->next = newfile;
 	else
@@ -96,6 +98,8 @@ t_file	*get_file(t_file **dontuseme, int inputfd)
 	newfile->fd = inputfd;
 	newfile->next = NULL;
 	newfile->raw = (char *)malloc(sizeof(char));
+	if (!newfile->raw)
+		return (NULL);
 	newfile->raw[0] = '\0';
 	return (newfile);
 }
@@ -106,7 +110,7 @@ int		get_next_line(int fd, char **line)
 	t_file			*file;
 
 	file = get_file(&persistent, fd);
-	if (BUFFER_SIZE < 0 || read(fd, 0, 0) == -1)
+	if (BUFFER_SIZE < 0 || read(fd, 0, 0) == -1 || !file)
 		return (-1);
 	read_line(file);
 	if (ft_strchr(file, '\n') != -1)
