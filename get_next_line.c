@@ -6,11 +6,12 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/10 14:26:28 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/11 12:03:08 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 /*
 ** 1 : A line has been read
@@ -18,103 +19,102 @@
 ** -1 : An error happened
 */
 
-int		freemachin(t_file **persistent, t_file *file)
+int		freemachin(t_file **head, t_file *file, int ret)
 {
 	t_file			*ptr;
 
 	free(file->raw);
 	file->raw = NULL;
-	if (*persistent == file)
-		*persistent = file->next;
+	if (*head == file)
+		*head = file->next;
 	else
 	{
-		ptr = *persistent;
+		ptr = *head;
 		while (ptr->next != file)
 			ptr = ptr->next;
 		ptr->next = file->next;
 	}
 	free(file);
 	file = NULL;
-	return (0);
+	return (ret);
 }
 
-int		extract_line(t_file **persistent, t_file *file, char **line, int c)
+int		extract_line(t_file **head, t_file *file, char **line, int c)
 {
 	char			*temp;
 
-	if (line)
-		free(*line);
-	*line = ft_substr(file, 0, ft_strchr(file, c));//Return -1 on fail
+	*line = ft_substr(file, 0, ft_strchr(file, c));
+	if (!*line)
+		return (freemachin(head, file, -1));
 	if (c == '\0')
-		return (freemachin(persistent, file));
-	temp = ft_substr(file, ft_strchr(file, c) + 1,//Return -1 on fail
+		return (freemachin(head, file, 0));
+	temp = ft_substr(file, ft_strchr(file, c) + 1,
 		file->len - ft_strchr(file, c));
-	file->len -= ft_strchr(file, c) + 1;
+	if (!temp)
+		return (freemachin(head, file, -1));
 	free(file->raw);
 	file->raw = temp;
+	file->len -= ft_strchr(file, c) + 1;
 	return (1);
 }
 
-void	read_line(t_file *file)
-{
-	size_t		readc;
-	char		*temp;
-	char		buf[BUFFER_SIZE + 1];//Malloc
-
-	readc = 1;
-	while (readc && ft_strchr(file, '\n') == -1)
-	{
-		readc = read(file->fd, buf, BUFFER_SIZE);
-		buf[readc] = '\0';
-		temp = ft_strjoin(file, buf, readc);//Return -1 on fail
-		file->len += readc;
-		free(file->raw);
-		file->raw = temp;
-	}
-}
-
-t_file	*get_file(t_file **dontuseme, int inputfd)//Rewrite
+t_file	*new_file(t_file **node, int inputfd)
 {
 	t_file		*newfile;
-	t_file		*persistent;
 
-	persistent = *dontuseme;
-	while (persistent && persistent->next)
-	{
-		if (persistent->fd == inputfd)
-			return (persistent);
-		persistent = persistent->next;
-	}
-	if (persistent && persistent->fd == inputfd)
-		return (persistent);
 	newfile = (t_file *)malloc(sizeof(t_file));
 	if (!newfile)
 		return (NULL);
-	if (*dontuseme)
-		persistent->next = newfile;
-	else
-		*dontuseme = newfile;
+	newfile->raw = (char *)malloc(sizeof(char));
+	if (!newfile->raw)
+	{
+		free(newfile);
+		return (NULL);
+	}
+	*node = newfile;
 	newfile->len = 0;
 	newfile->fd = inputfd;
 	newfile->next = NULL;
-	newfile->raw = (char *)malloc(sizeof(char));
-	if (!newfile->raw)
-		return (NULL);
 	newfile->raw[0] = '\0';
 	return (newfile);
 }
 
+t_file	*get_file(t_file **head, t_file *node, int inputfd)
+{
+	if (!*head)
+		return (new_file(head, inputfd));
+	else if (node->fd == inputfd)
+		return (node);
+	else if (node->next)
+		return (get_file(head, node->next, inputfd));
+	else
+		return (new_file(&node->next, inputfd));
+}
+
 int		get_next_line(int fd, char **line)
 {
-	static t_file	*persistent;
+	static t_file	*head;
 	t_file			*file;
+	ssize_t			readc;
+	char			*temp;
+	char			buf[BUFFER_SIZE + 1];
 
-	file = get_file(&persistent, fd);
+	file = get_file(&head, head, fd);
 	if (BUFFER_SIZE < 0 || read(fd, 0, 0) == -1 || !file)
 		return (-1);
-	read_line(file);
-	if (ft_strchr(file, '\n') != -1)
-		return (extract_line(&persistent, file, line, '\n'));
-	else
-		return (extract_line(&persistent, file, line, '\0'));
+	readc = 1;
+	while (readc && ft_strchr(file, '\n') == -1)
+	{
+		readc = read(file->fd, buf, BUFFER_SIZE);
+		if (readc == -1)
+			return (freemachin(&head, file, -1));
+		buf[readc] = '\0';
+		temp = ft_strjoin(file, buf, readc);
+		if (!temp)
+			return (freemachin(&head, file, -1));
+		file->len += readc;
+		free(file->raw);
+		file->raw = temp;
+	}
+	return (extract_line(&head, file, line, ((readc) ? '\n' : '\0')));
 }
