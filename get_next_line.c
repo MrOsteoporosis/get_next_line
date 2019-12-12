@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/11 12:03:08 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/12 10:36:13 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ int		extract_line(t_file **head, t_file *file, char **line, int c)
 	if (!temp)
 		return (freemachin(head, file, -1));
 	free(file->raw);
-	file->raw = temp;
 	file->len -= ft_strchr(file, c) + 1;
+	file->raw = temp;
 	return (1);
 }
 
