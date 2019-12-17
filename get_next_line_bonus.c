@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/16 14:17:51 by averheij      ########   odam.nl         */
+/*   Updated: 2019/12/17 10:40:27 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 /*
 ** 1 : A line has been read
-** 0 : EOF has been reached 
+** 0 : EOF has been reached
 ** -1 : An error happened
 */
 
