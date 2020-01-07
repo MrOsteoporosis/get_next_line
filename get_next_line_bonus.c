@@ -6,11 +6,13 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/18 13:29:41 by averheij      ########   odam.nl         */
+/*   Updated: 2020/01/07 13:45:59 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+#include <unistd.h>
+#include <stdlib.h>
 
 /*
 ** 1 : A line has been read
@@ -42,17 +44,16 @@ int		extract_line(t_file **head, t_file *file, char **line, int c)
 {
 	char			*temp;
 
-	*line = ft_substr(file, 0, ft_strchr(file, c));
+	*line = ft_substr(file->raw, 0, ft_strchr(file->raw, c));
 	if (!*line)
 		return (freemachin(head, file, -1));
 	if (c == '\0')
 		return (freemachin(head, file, 0));
-	temp = ft_substr(file, ft_strchr(file, c) + 1,
-		file->len - ft_strchr(file, c));
+	temp = ft_substr(file->raw, ft_strchr(file->raw, c) + 1,
+		ft_strchr(file->raw, '\0') - ft_strchr(file->raw, c));
 	if (!temp)
 		return (freemachin(head, file, -1));
 	free(file->raw);
-	file->len -= ft_strchr(file, c) + 1;
 	file->raw = temp;
 	return (1);
 }
@@ -71,7 +72,6 @@ t_file	*new_file(t_file **node, int inputfd)
 		return (NULL);
 	}
 	*node = newfile;
-	newfile->len = 0;
 	newfile->fd = inputfd;
 	newfile->next = NULL;
 	newfile->raw[0] = '\0';
@@ -102,18 +102,18 @@ int		get_next_line(int fd, char **line)
 	if (BUFFER_SIZE < 0 || read(fd, 0, 0) == -1 || !file || !line)
 		return (-1);
 	readc = 1;
-	while (readc && ft_strchr(file, '\n') == -1)
+	while (readc && ft_strchr(file->raw, '\n') == -1)
 	{
 		readc = read(file->fd, buf, BUFFER_SIZE);
 		if (readc == -1)
 			return (freemachin(&head, file, -1));
 		buf[readc] = '\0';
-		temp = ft_strjoin(file, buf, readc);
+		temp = ft_strjoin(file->raw, buf);
 		if (!temp)
 			return (freemachin(&head, file, -1));
-		file->len += readc;
 		free(file->raw);
 		file->raw = temp;
 	}
-	return (extract_line(&head, file, line, ((readc) ? '\n' : '\0')));
+	return (extract_line(&head, file, line,
+		((ft_strchr(file->raw, '\n') != -1) ? '\n' : '\0')));
 }

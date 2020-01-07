@@ -6,11 +6,12 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:25 by averheij       #+#    #+#                */
-/*   Updated: 2019/12/10 13:01:27 by averheij      ########   odam.nl         */
+/*   Updated: 2020/01/07 13:44:01 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
 
 char	*ft_strdup(const char *src)
 {
@@ -34,14 +35,14 @@ char	*ft_strdup(const char *src)
 	return (cpy);
 }
 
-int		ft_strchr(t_file *f, int c)
+int		ft_strchr(char *s, int c)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < f->len)
+	while (s[i])
 	{
-		if (f->raw[i] == c)
+		if (s[i] == c)
 			return (i);
 		i++;
 	}
@@ -50,20 +51,23 @@ int		ft_strchr(t_file *f, int c)
 	return (-1);
 }
 
-char	*ft_substr(t_file *f, unsigned int start, size_t sublen)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*sub;
+	size_t	i;
 
-	if (!f->raw)
+	if (!s)
 		return (NULL);
-	if (f->len < start)
+	i = 0;
+	while (s[i])
+		i++;
+	if (i < start)
 		return (ft_strdup(""));
 	sub = (char *)malloc(sizeof(char) *
-		(((f->len - start < sublen) ? f->len - start : sublen) + 1));
+		((i - start < len) ? i - start : len) + 1);
 	if (!sub)
 		return (NULL);
-	ft_strlcpy(sub, f->raw + start,
-		((f->len - start < sublen) ? f->len - start : sublen) + 1);
+	ft_strlcpy(sub, s + start, ((i - start < len) ? i - start : len) + 1);
 	return (sub);
 }
 
@@ -86,24 +90,28 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (i);
 }
 
-char	*ft_strjoin(t_file *file, char *str, size_t readc)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;
-	size_t	i;
+	int		l1;
+	int		l2;
+	int		i;
 
-	if (!file->raw || !str)
+	if (!s1 || !s2)
 		return (NULL);
-	res = (char *)malloc(sizeof(char) * (file->len + readc + 1));
+	l1 = ft_strchr(s1, '\0');
+	l2 = ft_strchr(s2, '\0');
+	res = (char *)malloc(sizeof(char) * (l1 + l2 + 1));
 	if (!res)
 		return (NULL);
-	res[file->len + readc] = '\0';
+	res[l1 + l2] = '\0';
 	i = 0;
-	while (i < file->len || i < readc)
+	while (i < l1 || i < l2)
 	{
-		if (i < file->len)
-			res[i] = file->raw[i];
-		if (i < readc)
-			res[i + file->len] = str[i];
+		if (i < l1)
+			res[i] = s1[i];
+		if (i < l2)
+			res[i + l1] = s2[i];
 		i++;
 	}
 	return (res);
