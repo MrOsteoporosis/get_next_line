@@ -1,6 +1,0 @@
-a.out
-*.dSYM
-*.txt
-main.c
-.DS_Store
-.gitignore
