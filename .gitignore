@@ -3,3 +3,4 @@ a.out
 *.txt
 main.c
 .DS_Store
+.gitignore
