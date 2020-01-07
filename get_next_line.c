@@ -6,7 +6,7 @@
 /*   By: averheij <averheij@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/26 13:08:34 by averheij       #+#    #+#                */
-/*   Updated: 2020/01/07 13:46:06 by averheij      ########   odam.nl         */
+/*   Updated: 2020/01/07 13:51:53 by averheij      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int		get_next_line(int fd, char **line)
 	char			buf[BUFFER_SIZE + 1];
 
 	file = get_file(&head, head, fd);
-	if (BUFFER_SIZE < 0 || read(fd, 0, 0) == -1 || !file || !line)
+	if (BUFFER_SIZE < 1 || read(fd, 0, 0) == -1 || !file || !line)
 		return (-1);
 	readc = 1;
 	while (readc && ft_strchr(file->raw, '\n') == -1)
